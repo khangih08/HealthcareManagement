@@ -78,7 +78,6 @@
 
             <!-- Heading -->
             <!--div class="sidebar-heading">
-                Addons
             </!--div-->
 
             <!-- Nav Item - Pages Collapse Menu -->
@@ -468,9 +467,9 @@
                 events: []
             });    
             calendar.render();
-            document.getElementById('addTaskBtn').addEventListener('click', function() {
-                let tasks = document.querySelectorAll('.task input[type="checkbox"]:checked');
-                tasks.forEach(function(task) {
+            document.querySelectorAll('.task input[type="checkbox"]').forEach(function(task) {
+                task.addEventListener('change', function() {
+                if (task.checked) {  
                     let label = task.nextElementSibling.innerText; 
                     let startTime = task.parentElement.querySelectorAll('.badge')[0].innerText; 
                     let endTime = task.parentElement.querySelectorAll('.badge')[1].innerText; 
@@ -484,6 +483,7 @@
                         event.start.toISOString().slice(0, 19) === eventStart && 
                         event.end.toISOString().slice(0, 19) === eventEnd
                     );
+
                 setTimeout(() => {
                     let eventExists = calendar.getEvents().some(event => 
                     event.title === label && 
@@ -492,18 +492,20 @@
                     );
                 if (!eventExists) {
                    calendar.addEvent({
-                   title: label,
-                   start: eventStart,
-                   end: eventEnd,
-                   allDay: false,  
-                   display: 'block'
-                });
-    }
-                 task.checked = false;
+                     title: label,
+                     start: eventStart,
+                     end: eventEnd,
+                     allDay: false,  
+                     display: 'block'
+                   });
+                }
+                   task.checked = false;
                 }, 100); 
+                }
+            });
             });
         });
-    });
+    
     document.querySelectorAll('.task .btn-outline-primary').forEach(editButton => {
         editButton.addEventListener('click', function() {
             let taskDiv = this.parentElement;
@@ -595,8 +597,7 @@
       function saveTasksToLocalStorage() {
         const tasks = getTasksFromHTML();
         localStorage.setItem('tasks', JSON.stringify(tasks));
- ///       alert("Tasks have been saved to localStorage!");
-      }
+       }
       
       
       saveTasksToLocalStorage();  
